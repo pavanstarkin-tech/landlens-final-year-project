@@ -1,0 +1,22 @@
+{
+  "name": "landlens-project",
+  "version": "1.0.0",
+  "description": "LandLens - AI-Powered Property Document Verification Platform",
+  "main": "backend_server.js",
+  "scripts": {
+    "start": "node start.js",
+    "dev": "node start.js",
+    "test": "node qa_test_suite.js",
+    "backend": "node backend_server.js",
+    "frontend": "npm --prefix frontend-react run dev",
+    "build": "npm --prefix frontend-react run build"
+  },
+  "keywords": [
+    "landlens",
+    "verification",
+    "property",
+    "ai"
+  ],
+  "author": "Pavan Stark",
+  "license": "ISC"
+}

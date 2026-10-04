@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LandLens 🌍🔍 — Interactive Showcase & System Architecture</title>
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #05070f;
+      --card-bg: rgba(10, 15, 30, 0.5);
+      --card-bg-hover: rgba(20, 26, 48, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(20, 184, 166, 0.4);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --color-teal: #14b8a6;
+      --color-teal-glow: rgba(20, 184, 166, 0.35);
+      --color-blue: #3b82f6;
+      --color-purple: #a855f7;
+      --color-amber: #f59e0b;
+      --color-emerald: #10b981;
+      --color-rose: #f43f5e;
+      --mouse-x: 0deg;
+      --mouse-y: 0deg;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-primary);
+      overflow-x: hidden;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 5% 15%, rgba(20, 184, 166, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 95% 85%, rgba(168, 85, 247, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-teal);
+    }
+
+    header {
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 7, 15, 0.85);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-container h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff 30%, var(--color-teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge {
+      padding: 0.35rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .badge-teal {
+      background: rgba(20, 184, 166, 0.08);
+      color: var(--color-teal);
+      border-color: rgba(20, 184, 166, 0.2);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 0.25rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1.1rem;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      background: var(--color-teal);
+      color: var(--bg-dark);
+      box-shadow: 0 4px 12px var(--color-teal-glow);
+    }
+
+    main {
+      max-width: 1550px;
+      margin: 1.5rem auto;
+      padding: 0 2rem;
+    }
+
+    .panel {
+      display: none;
+      animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Sub-tabs styling */
+    .sub-tabs-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .sub-tab-btn {
+      background: transparent;
+      border: none;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      position: relative;
+      padding: 0.5rem 0.25rem;
+      transition: color 0.3s;
+    }
+
+    .sub-tab-btn:hover, .sub-tab-btn.active {
+      color: var(--color-teal);
+    }
+
+    .sub-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -9px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--color-teal);
+      box-shadow: 0 0 8px var(--color-teal);
+    }
+
+    /* Tab 1: Mockup Slide */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-height: 690px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .step-card:hover {
+      background: var(--card-bg-hover);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateX(4px);
+    }
+
+    .step-card.active {
+      background: rgba(20, 184, 166, 0.06);
+      border-color: var(--color-teal);
+      box-shadow: 0 0 12px rgba(20, 184, 166, 0.12);
+    }
+
+    .step-number {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--color-teal);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .step-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .step-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .mockup-display {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      perspective: 1200px;
+      height: 690px;
+      justify-content: space-between;
+    }
+
+    .mockup-container {
+      width: 100%;
+      height: 540px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: #090d16;
+      transition: transform 0.1s ease-out;
+      transform-style: preserve-3d;
+      transform: rotateX(var(--mouse-y)) rotateY(var(--mouse-x));
+    }
+
+    .mockup-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: scale(0.98);
+    }
+
+    .mockup-image.active {
+      opacity: 1;
+      z-index: 1;
+      transform: scale(1);
+    }
+
+    .mockup-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.015);
+      padding: 0.85rem 1.25rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .mockup-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-teal);
+    }
+
+    .mockup-caption {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.15rem;
+    }
+
+    /* Tab 2: 3D Architecture Visualizer */
+    .arch-container {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      height: 690px;
+    }
+
+    .arch-scene {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1500px;
+    }
+
+    .arch-view {
+      position: relative;
+      width: 75%;
+      height: 80%;
+      transform-style: preserve-3d;
+      transform: rotateX(28deg) rotateY(-18deg);
+      transition: transform 0.12s ease-out;
+    }
+
+    .arch-layer {
+      position: absolute;
+      width: 100%;
+      height: 70px;
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 1.5rem;
+      transition: all 0.3s ease;
+      background: rgba(8, 12, 26, 0.3);
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .arch-layer:hover {
+      background: rgba(20, 184, 166, 0.04);
+      border-color: var(--color-teal);
+      box-shadow: 0 0 20px rgba(20, 184, 166, 0.06);
+    }
+
+    .arch-layer.active-layer {
+      border-color: var(--color-teal);
+      background: rgba(20, 184, 166, 0.06);
+    }
+
+    /* Depth layers */
+    .layer-client { transform: translateZ(160px) translateY(-100px); }
+    .layer-cdn { transform: translateZ(80px) translateY(-15px); }
+    .layer-backend { transform: translateZ(0px) translateY(70px); }
+    .layer-services { transform: translateZ(-80px) translateY(155px); }
+    .layer-database { transform: translateZ(-160px) translateY(240px); }
+
+    .arch-node {
+      background: rgba(10, 15, 30, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+      transform: translateZ(15px);
+    }
+
+    .arch-node.active-node {
+      border-color: var(--color-teal);
+      box-shadow: 0 0 12px var(--color-teal-glow);
+      transform: translateZ(25px);
+    }
+
+    .node-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .layer-client .node-dot { background-color: var(--color-blue); }
+    .layer-cdn .node-dot { background-color: var(--color-purple); }
+    .layer-backend .node-dot { background-color: var(--color-amber); }
+    .layer-services .node-dot { background-color: var(--color-rose); }
+    .layer-database .node-dot { background-color: var(--color-emerald); }
+
+    .layer-client h4 { color: var(--color-blue); }
+    .layer-cdn h4 { color: var(--color-purple); }
+    .layer-backend h4 { color: var(--color-amber); }
+    .layer-services h4 { color: var(--color-rose); }
+    .layer-database h4 { color: var(--color-emerald); }
+
+    .layer-title-badge {
+      position: absolute;
+      left: -15px;
+      top: -15px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      padding: 0.15rem 0.5rem;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 4px;
+      color: var(--text-secondary);
+    }
+
+    .arch-layer:hover .layer-title-badge, .arch-layer.active-layer .layer-title-badge {
+      color: var(--color-teal);
+      border-color: var(--color-teal);
+    }
+
+    .arch-sidebar {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      overflow-y: auto;
+    }
+
+    .arch-details-card {
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .arch-details-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--color-teal);
+    }
+
+    .arch-tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.85rem;
+    }
+
+    .tech-tag {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* Pipeline Sequence Section */
+    .flow-step-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .flow-step {
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.01);
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .flow-step span {
+      font-weight: 700;
+      color: var(--color-teal);
+    }
+
+    /* Tab 3: Relational DB Schema Map */
+    .erd-container {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      height: 690px;
+    }
+
+    .erd-scene {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .erd-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .erd-grid {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1.25rem;
+      z-index: 2;
+    }
+
+    .table-card {
+      background: rgba(10, 14, 26, 0.98);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-card:hover {
+      border-color: rgba(20, 184, 166, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .table-card.relation-highlight {
+      border-color: var(--color-teal);
+      box-shadow: 0 0 12px var(--color-teal-glow);
+    }
+
+    .table-header {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 0.45rem 0.75rem;
+      font-weight: 700;
+      font-size: 0.78rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-header span {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .table-fields {
+      padding: 0.35rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      flex-grow: 1;
+      max-height: 140px;
+    }
+
+    .field-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      padding: 0.12rem 0;
+    }
+
+    .field-name {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .field-name.pk {
+      color: var(--color-amber);
+      font-weight: 700;
+    }
+
+    .field-name.fk {
+      color: var(--color-blue);
+      font-weight: 700;
+    }
+
+    .field-type {
+      color: var(--text-secondary);
+      font-family: monospace;
+      font-size: 0.65rem;
+    }
+
+    .erd-sidebar {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      overflow-y: auto;
+    }
+
+    /* State Machine tab (inside Walkthrough sub-tab) */
+    .sm-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+      position: relative;
+    }
+
+    .sm-node {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .sm-node:hover, .sm-node.active {
+      border-color: var(--color-teal);
+      background: rgba(20, 184, 166, 0.05);
+      box-shadow: 0 0 15px rgba(20, 184, 166, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .sm-node-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    
+    .sm-node-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--color-teal);
+    }
+
+    .sm-desc-panel {
+      margin-top: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <img src="./frontend-react/public/logo.png" alt="LandLens Logo" width="42" height="42" style="border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);" onerror="this.src='https://raw.githubusercontent.com/sickn33/agentic-awesome-skills/main/assets/icons/default-agent.png';">
+      <div>
+        <h1 style="font-size: 1.5rem;">LandLens 🌍🔍 — Government Land Verification & Citizen Platform</h1>
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.15rem; flex-wrap: wrap;">
+          <span class="badge badge-teal">IBM SkillsBuild: AI for Impact</span>
+          <span class="badge" style="background: rgba(59, 130, 246, 0.12); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3);">Track: Governance & Citizen Services</span>
+          <span class="badge" style="background: rgba(168, 85, 247, 0.08); color: var(--color-purple); border-color: rgba(168, 85, 247, 0.2);">IBM Bob AI Assistant (Multilingual)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'walkthrough')">App Pages & State</button>
+      <button class="tab-btn" onclick="switchTab(event, 'architecture')">AWS Network Topology</button>
+      <button class="tab-btn" onclick="switchTab(event, 'database')">Database Relational (3NF)</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Tab 1: App Walkthrough & State Machine -->
+    <div id="walkthrough" class="panel active">
+      <div class="sub-tabs-bar">
+        <button class="sub-tab-btn active" onclick="switchSubTab(event, 'mockups-subpanel')">Application Interface Mockups</button>
+        <button class="sub-tab-btn" onclick="switchSubTab(event, 'state-subpanel')">Land Verification State Machine</button>
+      </div>
+
+      <!-- Sub-tab A: Mockup Slider -->
+      <div id="mockups-subpanel" class="sub-panel" style="display: block;">
+        <div class="showcase-grid">
+          <div class="steps-list">
+            <div class="step-card active" onclick="switchStep(0)">
+              <span class="step-number">Step 1</span>
+              <span class="step-title">Authentication Portal</span>
+              <span class="step-desc">Role-based JWT secure path mapping permissions for buyers, sellers, and officers.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(1)">
+              <span class="step-number">Step 2</span>
+              <span class="step-title">Buyer Dashboard</span>
+              <span class="step-desc">Aggregated view tracking verified registry land parcels and Trust Index scoring.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(2)">
+              <span class="step-number">Step 3</span>
+              <span class="step-title">Property Marketplace</span>
+              <span class="step-desc">User exploration listing verified assets with query filters for district and status.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(3)">
+              <span class="step-number">Step 4</span>
+              <span class="step-title">Mapbox GL JS GIS Mapping</span>
+              <span class="step-desc">Draw and verify exact polygon boundaries checking for database spatial overlaps.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(4)">
+              <span class="step-number">Step 5</span>
+              <span class="step-title">GIS Spatial Details</span>
+              <span class="step-desc">Widescreen property panel summarizing coordinates, land areas, and survey bounds.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(5)">
+              <span class="step-number">Step 6</span>
+              <span class="step-title">AI Forgery Verification</span>
+              <span class="step-desc">Automated OCR document scan processing displaying Trust Score, anomalies, and logs.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(6)">
+              <span class="step-number">Step 7</span>
+              <span class="step-title">Immersive 360° VR View</span>
+              <span class="step-desc">Immersive remote land visual inspections driven by the Pannellum VR engine.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(7)">
+              <span class="step-number">Step 8</span>
+              <span class="step-title">Seller Control Dashboard</span>
+              <span class="step-desc">Register land survey files, track approval pipeline, and verify ownership claims.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(8)">
+              <span class="step-number">Step 9</span>
+              <span class="step-title">Officer Inspection Scheduler</span>
+              <span class="step-desc">Interactive visit bookings calendar assigning inspections to local government officials.</span>
+            </div>
+            <div class="step-card" onclick="switchStep(9)">
+              <span class="step-number">Step 10</span>
+              <span class="step-title">Profile Settings</span>
+              <span class="step-desc">Manage user profiles, secure credentials hash, and roles mappings configurations.</span>
+            </div>
+          </div>
+
+          <div class="mockup-display" id="mockupDisplay">
+            <div class="mockup-container" id="mockupContainer">
+              <img src="./dashscreenshots/login-desktop.png" class="mockup-image active" alt="Step 1">
+              <img src="./dashscreenshots/userdash.png" class="mockup-image" alt="Step 2">
+              <img src="./dashscreenshots/userexplore.png" class="mockup-image" alt="Step 3">
+              <img src="./dashscreenshots/usermap.png" class="mockup-image" alt="Step 4">
+              <img src="./dashscreenshots/loacationdetaislofland.png" class="mockup-image" alt="Step 5">
+              <img src="./dashscreenshots/aianalysis.png" class="mockup-image" alt="Step 6">
+              <img src="./dashscreenshots/propertydetails.png" class="mockup-image" alt="Step 7">
+              <img src="./dashscreenshots/sellerdash.png" class="mockup-image" alt="Step 8">
+              <img src="./dashscreenshots/userschedules.png" class="mockup-image" alt="Step 9">
+              <img src="./dashscreenshots/useracct.png" class="mockup-image" alt="Step 10">
+            </div>
+
+            <div class="mockup-details">
+              <div>
+                <div class="mockup-title" id="mockupTitle">Authentication Portal</div>
+                <div class="mockup-caption" id="mockupCaption">Live preview of the secure login portal routing roles to corresponding layouts.</div>
+              </div>
+              <div class="badge badge-teal">Live Preview</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-tab B: State Machine -->
+      <div id="state-subpanel" class="sub-panel" style="display: none;">
+        <div class="sm-grid">
+          <div class="sm-node active" onclick="selectState(0)">
+            <span class="sm-node-badge">State 1</span>
+            <span class="sm-node-title">UPLOADED</span>
+          </div>
+          <div class="sm-node" onclick="selectState(1)">
+            <span class="sm-node-badge">State 2</span>
+            <span class="sm-node-title">AI_VERIFICATION_PENDING</span>
+          </div>
+          <div class="sm-node" onclick="selectState(2)">
+            <span class="sm-node-badge">State 3</span>
+            <span class="sm-node-title">AI_REJECTED</span>
+          </div>
+          <div class="sm-node" onclick="selectState(3)">
+            <span class="sm-node-badge">State 4</span>
+            <span class="sm-node-title">PENDING_GOVT_AUDIT</span>
+          </div>
+          <div class="sm-node" onclick="selectState(4)">
+            <span class="sm-node-badge">State 5</span>
+            <span class="sm-node-title">APPROVED / LIVE</span>
+          </div>
+          <div class="sm-node" onclick="selectState(5)">
+            <span class="sm-node-badge">State 6</span>
+            <span class="sm-node-title">DISPUTED</span>
+          </div>
+        </div>
+
+        <div class="sm-desc-panel">
+          <h3 id="smTitle" style="color: var(--color-teal); margin-bottom: 0.5rem; font-size: 1.15rem;">UPLOADED — Initial Land Entry</h3>
+          <p id="smDesc" style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+            The seller registers coordinates, survey boundary polygons, and uploads PDF files (Patta certificate, tax receipts, or deeds). 
+            Creates a record in the `properties` table with status set to `UPLOADED`.
+          </p>
+          <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-primary); letter-spacing: 0.05rem;">Associated API Endpoint:</span>
+            <code style="background: rgba(255,255,255,0.03); color: var(--color-blue); font-size: 0.8rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-family: monospace; display: inline-block; margin-left: 0.5rem;" id="smApi">POST /api/properties</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: 3D Architecture Visualizer -->
+    <div id="architecture" class="panel">
+      <div class="arch-container">
+        <div class="arch-scene" id="archScene">
+          <div class="arch-view" id="archView">
+            
+            <!-- Layer 1: Client -->
+            <div class="arch-layer layer-client" onclick="selectLayer('client')">
+              <span class="layer-title-badge">Client & Gateway (Mumbai Region)</span>
+              <div class="arch-node" id="node-react"><span class="node-dot"></span>React 18 & TS</div>
+              <div class="arch-node" id="node-vite"><span class="node-dot"></span>Vite 5</div>
+              <div class="arch-node" id="node-mapbox"><span class="node-dot"></span>Mapbox GL JS</div>
+              <div class="arch-node" id="node-pannellum"><span class="node-dot"></span>Pannellum VR</div>
+            </div>
+
+            <!-- Layer 2: CDN Edge -->
+            <div class="arch-layer layer-cdn" onclick="selectLayer('cdn')">
+              <span class="layer-title-badge">CloudFront Edge Distribution</span>
+              <div class="arch-node" id="node-cloudfront"><span class="node-dot"></span>CloudFront HTTPS</div>
+              <div class="arch-node" id="node-s3"><span class="node-dot"></span>AWS S3 Assets</div>
+              <div class="arch-node" id="node-alb"><span class="node-dot"></span>AWS ALB routing</div>
+            </div>
+
+            <!-- Layer 3: Backend API -->
+            <div class="arch-layer layer-backend" onclick="selectLayer('backend')">
+              <span class="layer-title-badge">Backend Web Compute (VPC Private Subnet)</span>
+              <div class="arch-node" id="node-springboot"><span class="node-dot"></span>Spring Boot 3.4</div>
+              <div class="arch-node" id="node-security"><span class="node-dot"></span>JWT Security</div>
+              <div class="arch-node" id="node-fargate"><span class="node-dot"></span>ECS Fargate</div>
+            </div>
+
+            <!-- Layer 4: AI & OCR services -->
+            <div class="arch-layer layer-services" onclick="selectLayer('services')">
+              <span class="layer-title-badge">Asynchronous AI Verification Engine</span>
+              <div class="arch-node" id="node-ocr"><span class="node-dot"></span>OCR Extraction</div>
+              <div class="arch-node" id="node-trustscore"><span class="node-dot"></span>AI Trust Engine</div>
+              <div class="arch-node" id="node-duplicate"><span class="node-dot"></span>Overlap Checks</div>
+            </div>
+
+            <!-- Layer 5: Database -->
+            <div class="arch-layer layer-database" onclick="selectLayer('database')">
+              <span class="layer-title-badge">Data Persistence Tier</span>
+              <div class="arch-node" id="node-mysql"><span class="node-dot"></span>Hostinger MySQL 8.0</div>
+              <div class="arch-node" id="node-nat"><span class="node-dot"></span>AWS NAT Egress</div>
+              <div class="arch-node" id="node-jpa"><span class="node-dot"></span>JPA / Hibernate</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="arch-sidebar">
+          <div class="arch-details-card">
+            <div class="arch-details-title" id="layerTitle">Select an Architecture Layer</div>
+            <p id="layerDesc" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+              Select or hover on the 3D visualizer layers to examine components, data interactions, and framework stacks.
+            </p>
+            <div class="arch-tech-list" id="layerTech">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+          
+          <div class="arch-details-card">
+            <div class="arch-details-title" style="color: var(--color-blue); font-size: 0.95rem;">Request Lifecycle Sequence Flow</div>
+            <div class="flow-step-container" id="layerFlow">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Relational DB Schema Map -->
+    <div id="database" class="panel">
+      <div class="erd-container">
+        <div class="erd-scene" id="erdScene">
+          <svg class="erd-canvas" id="erdCanvas">
+            <!-- SVG Paths rendered dynamically -->
+          </svg>
+          
+          <div class="erd-grid">
+            
+            <!-- Table 1: roles -->
+            <div class="table-card" id="tbl-roles" onmouseenter="highlightRelation('roles')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                roles <span>RBAC mapping</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">name</span><span class="field-type">VARCHAR(20)</span></div>
+                <div class="field-row"><span class="field-name">description</span><span class="field-type">TEXT</span></div>
+              </div>
+            </div>
+
+            <!-- Table 2: users -->
+            <div class="table-card" id="tbl-users" onmouseenter="highlightRelation('users')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                users <span>Primary Profile</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">email</span><span class="field-type">VARCHAR(100)</span></div>
+                <div class="field-row"><span class="field-name">password_hash</span><span class="field-type">VARCHAR(100)</span></div>
+                <div class="field-row"><span class="field-name fk">role_id</span><span class="field-type">VARCHAR(36)</span></div>
+              </div>
+            </div>
+
+            <!-- Table 3: refresh_tokens -->
+            <div class="table-card" id="tbl-refresh_tokens" onmouseenter="highlightRelation('refresh_tokens')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                refresh_tokens <span>Auth Keys</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">user_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">token</span><span class="field-type">VARCHAR(255)</span></div>
+                <div class="field-row"><span class="field-name">expiry_date</span><span class="field-type">TIMESTAMP</span></div>
+              </div>
+            </div>
+
+            <!-- Table 4: properties -->
+            <div class="table-card" id="tbl-properties" onmouseenter="highlightRelation('properties')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                properties <span>Registry Ledger</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">provider_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">title</span><span class="field-type">VARCHAR(100)</span></div>
+                <div class="field-row"><span class="field-name">price</span><span class="field-type">DECIMAL(15,2)</span></div>
+                <div class="field-row"><span class="field-name">survey_number</span><span class="field-type">VARCHAR(30)</span></div>
+                <div class="field-row"><span class="field-name">status</span><span class="field-type">VARCHAR(20)</span></div>
+              </div>
+            </div>
+
+            <!-- Table 5: property_images -->
+            <div class="table-card" id="tbl-property_images" onmouseenter="highlightRelation('property_images')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                property_images <span>Images</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">image_url</span><span class="field-type">VARCHAR(255)</span></div>
+                <div class="field-row"><span class="field-name">display_order</span><span class="field-type">INT</span></div>
+              </div>
+            </div>
+
+            <!-- Table 6: property_documents -->
+            <div class="table-card" id="tbl-property_documents" onmouseenter="highlightRelation('property_documents')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                property_documents <span>PDF Deeds</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">document_type</span><span class="field-type">VARCHAR(30)</span></div>
+                <div class="field-row"><span class="field-name">ocr_status</span><span class="field-type">VARCHAR(20)</span></div>
+                <div class="field-row"><span class="field-name">verification_status</span><span class="field-type">VARCHAR(20)</span></div>
+              </div>
+            </div>
+
+            <!-- Table 7: ai_verifications -->
+            <div class="table-card" id="tbl-ai_verifications" onmouseenter="highlightRelation('ai_verifications')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                ai_verifications <span>AI Scores</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">ai_trust_score</span><span class="field-type">DECIMAL(5,2)</span></div>
+                <div class="field-row"><span class="field-name">forgery_score</span><span class="field-type">DECIMAL(5,2)</span></div>
+                <div class="field-row"><span class="field-name">risk_score</span><span class="field-type">DECIMAL(5,2)</span></div>
+              </div>
+            </div>
+
+            <!-- Table 8: government_verifications -->
+            <div class="table-card" id="tbl-government_verifications" onmouseenter="highlightRelation('government_verifications')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                government_verifications <span>Audit</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">officer_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">remarks</span><span class="field-type">TEXT</span></div>
+                <div class="field-row"><span class="field-name">status</span><span class="field-type">VARCHAR(20)</span></div>
+              </div>
+            </div>
+
+            <!-- Table 9: verification_timelines -->
+            <div class="table-card" id="tbl-verification_timelines" onmouseenter="highlightRelation('verification_timelines')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                verification_timelines <span>Timelines</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">user_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">action</span><span class="field-type">VARCHAR(100)</span></div>
+              </div>
+            </div>
+
+            <!-- Table 10: duplicate_claims -->
+            <div class="table-card" id="tbl-duplicate_claims" onmouseenter="highlightRelation('duplicate_claims')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                duplicate_claims <span>GIS Overlaps</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_a_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_b_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">similarity</span><span class="field-type">DECIMAL(5,2)</span></div>
+              </div>
+            </div>
+
+            <!-- Table 11: fraud_reports -->
+            <div class="table-card" id="tbl-fraud_reports" onmouseenter="highlightRelation('fraud_reports')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                fraud_reports <span>Public Alerts</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">reporter_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">reason</span><span class="field-type">VARCHAR(255)</span></div>
+              </div>
+            </div>
+
+            <!-- Table 12: property_visits -->
+            <div class="table-card" id="tbl-property_visits" onmouseenter="highlightRelation('property_visits')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                property_visits <span>Schedules</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">buyer_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name">visit_date</span><span class="field-type">DATE</span></div>
+              </div>
+            </div>
+
+            <!-- Table 13: saved_properties -->
+            <div class="table-card" id="tbl-saved_properties" onmouseenter="highlightRelation('saved_properties')" onmouseleave="clearRelation()">
+              <div class="table-header">
+                saved_properties <span>Bookmarks</span>
+              </div>
+              <div class="table-fields">
+                <div class="field-row"><span class="field-name pk">id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">buyer_id</span><span class="field-type">VARCHAR(36)</span></div>
+                <div class="field-row"><span class="field-name fk">property_id</span><span class="field-type">VARCHAR(36)</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="erd-sidebar">
+          <div class="erd-details-card">
+            <div class="erd-details-title" id="erdTitle">Database Model</div>
+            <p id="erdDesc" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+              Hover over database table cards to trace foreign key relationships and visual linking nodes.
+            </p>
+          </div>
+          
+          <div class="erd-details-card">
+            <div class="erd-details-title" style="color: var(--color-blue); font-size: 0.95rem;">Key Columns Legend</div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+              <div><span style="color: var(--color-amber); font-weight: 700;">PK</span>: Primary Key (Yellow UUID identifier)</div>
+              <div><span style="color: var(--color-blue); font-weight: 700;">FK</span>: Foreign Key (Blue relationship mapping)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Tab Switching
+    function switchTab(evt, tabId) {
+      const activeTab = document.querySelector('.tab-btn.active');
+      if (activeTab) activeTab.classList.remove('active');
+      
+      const activePanel = document.querySelector('.panel.active');
+      if (activePanel) activePanel.classList.remove('active');
+
+      evt.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+
+      if (tabId === 'database') {
+        setTimeout(drawERDConnections, 100);
+      }
+    }
+
+    // Sub-tab switching inside "App Pages & State"
+    function switchSubTab(evt, subPanelId) {
+      document.querySelectorAll('.sub-panel').forEach(p => p.style.display = 'none');
+      document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+      
+      evt.currentTarget.classList.add('active');
+      document.getElementById(subPanelId).style.display = 'block';
+    }
+
+    // Mockup Steps
+    const stepData = [
+      { title: "1. Authentication Portal", caption: "Secure login pathway utilizing JWT tokens and role validations for buyers, sellers, and officers.", src: "./dashscreenshots/login-desktop.png" },
+      { title: "2. Buyer Dashboard", caption: "Glassmorphism UI summarizing holdings, transaction requests progress, and calculated Trust indicators.", src: "./dashscreenshots/userdash.png" },
+      { title: "3. Property Marketplace", caption: "Exploration search grid with filters showing validated registry listings.", src: "./dashscreenshots/userexplore.png" },
+      { title: "4. Mapbox GL JS GIS Mapping", caption: "Map overlay displaying drawn boundaries polygon. Computes overlap boundaries clash.", src: "./dashscreenshots/usermap.png" },
+      { title: "5. GIS Coordinates Details", caption: "Widescreen panel displaying survey number, acreage, and exact longitude/latitude benchmarks.", src: "./dashscreenshots/loacationdetaislofland.png" },
+      { title: "6. AI Forgery Checks", caption: "OCR scanned Patta certificate display showing calculated Trust levels and anomaly metrics details.", src: "./dashscreenshots/aianalysis.png" },
+      { title: "7. Immersive 360° VR Tour", caption: "Remote view player driven by Pannellum VR allowing inspection of the location remotely.", src: "./dashscreenshots/propertydetails.png" },
+      { title: "8. Seller Control Panel", caption: "Land provider workspace to submit deeds, draw boundaries coordinates, and track validation status.", src: "./dashscreenshots/sellerdash.png" },
+      { title: "9. Officer Inspection Scheduler", caption: "Scheduled booking system assigning physical visits and audits to regional officials.", src: "./dashscreenshots/userschedules.png" },
+      { title: "10. Profile Settings", caption: "Manage account settings, credentials security configurations, and user profile parameters.", src: "./dashscreenshots/useracct.png" }
+    ];
+
+    function switchStep(index) {
+      document.querySelectorAll('.step-card').forEach((card, i) => {
+        if (i === index) card.classList.add('active');
+        else card.classList.remove('active');
+      });
+
+      document.querySelectorAll('.mockup-image').forEach((img, i) => {
+        if (i === index) img.classList.add('active');
+        else img.classList.remove('active');
+      });
+
+      document.getElementById('mockupTitle').innerText = stepData[index].title;
+      document.getElementById('mockupCaption').innerText = stepData[index].caption;
+    }
+
+    // State Machine description mapping
+    const stateData = [
+      { title: "UPLOADED — Register Property Details", desc: "The seller submits land details, survey code, coordinates, and deed files. A record is added to the `properties` table with the status set to UPLOADED.", api: "POST /api/properties" },
+      { title: "AI_VERIFICATION_PENDING — OCR & Forgery Scan", desc: "Automated cron tasks trigger OCR scanning of deeds. GenAI models check for owner validation, boundary anomalies, and calculate the overall Trust Score.", api: "ASYNC Task / Background Service" },
+      { title: "AI_REJECTED — System Flags Forgery", desc: "Triggered automatically if document authenticity falls below threshold (e.g., trust score < 60%) or if a spatial coordinate overlap is detected.", api: "Automatic State Transition" },
+      { title: "PENDING_GOVT_AUDIT — Government Review", desc: "For properties passing the AI evaluations. The parcel is assigned to regional officers who schedule physical site visits and submit remarks.", api: "PUT /api/properties/{id}/verify" },
+      { title: "APPROVED & LIVE — Listed on Marketplace", desc: "Officer confirms coordinates. Status updates to APPROVED, publishing the listing to the public explorer marketplace.", api: "PUT /api/properties/{id}/approve" },
+      { title: "DISPUTED — Fraud Alert Flags", desc: "Buyers or officers can file dispute reports on active properties. Status shifts to DISPUTED, halting listing and triggering re-audit tasks.", api: "POST /api/fraud" }
+    ];
+
+    function selectState(index) {
+      document.querySelectorAll('.sm-node').forEach((node, i) => {
+        if (i === index) node.classList.add('active');
+        else node.classList.remove('active');
+      });
+
+      document.getElementById('smTitle').innerText = stateData[index].title;
+      document.getElementById('smDesc').innerText = stateData[index].desc;
+      document.getElementById('smApi').innerText = stateData[index].api;
+    }
+
+    // 3D Parallax Tilt Effects
+    const mockupContainer = document.getElementById('mockupContainer');
+    const mockupDisplay = document.getElementById('mockupDisplay');
+    
+    mockupDisplay.addEventListener('mousemove', (e) => {
+      const rect = mockupDisplay.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const mouseX = ((x / rect.width) - 0.5) * 12; 
+      const mouseY = -((y / rect.height) - 0.5) * 12;
+      
+      mockupContainer.style.setProperty('--mouse-x', `${mouseX}deg`);
+      mockupContainer.style.setProperty('--mouse-y', `${mouseY}deg`);
+    });
+
+    mockupDisplay.addEventListener('mouseleave', () => {
+      mockupContainer.style.setProperty('--mouse-x', '0deg');
+      mockupContainer.style.setProperty('--mouse-y', '0deg');
+    });
+
+    const archScene = document.getElementById('archScene');
+    const archView = document.getElementById('archView');
+
+    archScene.addEventListener('mousemove', (e) => {
+      const rect = archScene.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const tiltX = 28 - ((y / rect.height) - 0.5) * 18; 
+      const tiltY = -18 + ((x / rect.width) - 0.5) * 18;
+
+      archView.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    });
+
+    archScene.addEventListener('mouseleave', () => {
+      archView.style.transform = `rotateX(28deg) rotateY(-18deg)`;
+    });
+
+    // Architecture details mapping
+    const archData = {
+      client: {
+        title: "🎨 Client UI & Mapping",
+        desc: "Interactive React 18 + Vite client running state mapping, boundary drawing polygon via Mapbox GL JS, and Pannellum VR image rendering.",
+        tech: ["React 18", "Vite 5", "TypeScript 5.0", "Tailwind CSS", "Mapbox GL JS", "Pannellum VR", "Axios"],
+        flow: [
+          "1. User draws land bounds coordinates in browser.",
+          "2. Axios client bundles request with Bearer JWT token.",
+          "3. Makes HTTPS payload request routing to CloudFront."
+        ]
+      },
+      cdn: {
+        title: "⚡ CDN & Asset Edge Distribution",
+        desc: "AWS CloudFront Edge terminates SSL/HTTPS. Routes /api/* directly to backend load balancer and fetches UI files from S3 static buckets.",
+        tech: ["AWS CloudFront", "AWS S3 Static bucket", "Application Load Balancer (ALB)", "WAF Filtering"],
+        flow: [
+          "1. CloudFront intercepts call to route static JS/CSS from S3.",
+          "2. Proxy configurations forward API payload to public subnets ALB.",
+          "3. ALB filters header and checks routing target group."
+        ]
+      },
+      backend: {
+        title: "⚙️ Core Application Server (VPC Private Subnet)",
+        desc: "AWS ECS Fargate serverless containers running Spring Boot 3.4.0. Checks JWT filters, authorization permissions, and routes JPA JDBC calls.",
+        tech: ["Spring Boot 3.4.0", "Spring Security", "JWT Filter Chain", "Spring Data JPA", "AWS ECS Fargate"],
+        flow: [
+          "1. ECS Container handles request target group on port 8080.",
+          "2. Spring Security Filter validates JWT validity mapping roles.",
+          "3. Service layer invokes business logic transactions."
+        ]
+      },
+      services: {
+        title: "🤖 Asynchronous AI Verification Services",
+        desc: "OCR processing pipelines running document content text extraction. Compares values, scans forgery metrics, and flags coordinate overlaps.",
+        tech: ["Optical Character Recognition (OCR)", "GenAI Forgery checks", "Spatial overlap geometry engine"],
+        flow: [
+          "1. Service starts background tasks during document upload.",
+          "2. OCR extracts text values (Patta, Seller name, Survey code).",
+          "3. AI checks duplicate coordinates and computes Trust Index."
+        ]
+      },
+      database: {
+        title: "🛡️ Data Persistence & JDBC Routing",
+        desc: "Relational database server hosting normalized 3NF schemas. Secure JDBC pool access handled via AWS NAT Gateway static egress IP routing.",
+        tech: ["MySQL 8.0 (3NF)", "Hibernate JPA", "AWS NAT Gateway", "Egress IP: 13.207.227.126"],
+        flow: [
+          "1. Hibernate JPA compiles logic into native MySQL queries.",
+          "2. Routes traffic out VPC Private subnet via AWS NAT Gateway.",
+          "3. Hostinger DB verifies NAT static IP and executes CRUD."
+        ]
+      }
+    };
+
+    function selectLayer(layerId) {
+      document.querySelectorAll('.arch-layer').forEach(l => l.classList.remove('active-layer'));
+      document.querySelectorAll('.arch-node').forEach(n => n.classList.remove('active-node'));
+      
+      const layer = document.querySelector(`.layer-${layerId}`);
+      if (layer) {
+        layer.classList.add('active-layer');
+        layer.querySelectorAll('.arch-node').forEach(n => n.classList.add('active-node'));
+      }
+
+      document.getElementById('layerTitle').innerText = archData[layerId].title;
+      document.getElementById('layerDesc').innerText = archData[layerId].desc;
+
+      const techContainer = document.getElementById('layerTech');
+      techContainer.innerHTML = '';
+      archData[layerId].tech.forEach(t => {
+        const span = document.createElement('span');
+        span.className = 'tech-tag';
+        span.innerText = t;
+        techContainer.appendChild(span);
+      });
+
+      const flowContainer = document.getElementById('layerFlow');
+      flowContainer.innerHTML = '';
+      archData[layerId].flow.forEach(step => {
+        const div = document.createElement('div');
+        div.className = 'flow-step';
+        div.innerHTML = `<span>${step.substring(0, 2)}</span> ${step.substring(3)}`;
+        flowContainer.appendChild(div);
+      });
+    }
+
+    // Database Relationship Lines Canvas
+    function drawERDConnections() {
+      const canvas = document.getElementById('erdCanvas');
+      const container = document.getElementById('erdScene');
+      canvas.setAttribute('width', container.clientWidth);
+      canvas.setAttribute('height', container.clientHeight);
+      
+      canvas.innerHTML = ''; // Clear lines
+
+      const relationships = [
+        { from: 'tbl-roles', to: 'tbl-users', color: 'var(--color-blue)' },
+        { from: 'tbl-users', to: 'tbl-refresh_tokens', color: 'var(--color-blue)' },
+        { from: 'tbl-users', to: 'tbl-properties', color: 'var(--color-teal)' },
+        { from: 'tbl-properties', to: 'tbl-property_images', color: 'var(--color-teal)' },
+        { from: 'tbl-properties', to: 'tbl-property_documents', color: 'var(--color-purple)' },
+        { from: 'tbl-properties', to: 'tbl-ai_verifications', color: 'var(--color-purple)' },
+        { from: 'tbl-properties', to: 'tbl-government_verifications', color: 'var(--color-amber)' },
+        { from: 'tbl-users', to: 'tbl-government_verifications', color: 'var(--color-blue)' },
+        { from: 'tbl-properties', to: 'tbl-verification_timelines', color: 'var(--color-rose)' },
+        { from: 'tbl-users', to: 'tbl-verification_timelines', color: 'var(--color-blue)' },
+        { from: 'tbl-properties', to: 'tbl-duplicate_claims', color: 'var(--color-rose)' },
+        { from: 'tbl-users', to: 'tbl-fraud_reports', color: 'var(--color-blue)' },
+        { from: 'tbl-properties', to: 'tbl-fraud_reports', color: 'var(--color-rose)' },
+        { from: 'tbl-users', to: 'tbl-property_visits', color: 'var(--color-blue)' },
+        { from: 'tbl-properties', to: 'tbl-property_visits', color: 'var(--color-emerald)' },
+        { from: 'tbl-users', to: 'tbl-saved_properties', color: 'var(--color-blue)' },
+        { from: 'tbl-properties', to: 'tbl-saved_properties', color: 'var(--color-emerald)' }
+      ];
+
+      relationships.forEach(rel => {
+        const fromEl = document.getElementById(rel.from);
+        const toEl = document.getElementById(rel.to);
+        
+        if (fromEl && toEl) {
+          const fromRect = fromEl.getBoundingClientRect();
+          const toRect = toEl.getBoundingClientRect();
+          const pRect = container.getBoundingClientRect();
+          
+          const startX = (fromRect.left + fromRect.width / 2) - pRect.left;
+          const startY = (fromRect.top + fromRect.height / 2) - pRect.top;
+          const endX = (toRect.left + toRect.width / 2) - pRect.left;
+          const endY = (toRect.top + toRect.height / 2) - pRect.top;
+          
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          const midX = (startX + endX) / 2;
+          const d = `M ${startX} ${startY} C ${midX} ${startY}, ${midX} ${endY}, ${endX} ${endY}`;
+          
+          path.setAttribute('d', d);
+          path.setAttribute('fill', 'none');
+          path.setAttribute('stroke', rel.color);
+          path.setAttribute('stroke-width', '1.5');
+          path.setAttribute('opacity', '0.12');
+          path.setAttribute('class', 'relation-link');
+          path.setAttribute('id', `link-${rel.from}-${rel.to}`);
+          
+          canvas.appendChild(path);
+        }
+      });
+    }
+
+    // Relational highlighting map
+    const relationMaps = {
+      roles: ['users'],
+      users: ['roles', 'refresh_tokens', 'properties', 'government_verifications', 'verification_timelines', 'fraud_reports', 'property_visits', 'saved_properties'],
+      refresh_tokens: ['users'],
+      properties: ['users', 'property_images', 'property_documents', 'ai_verifications', 'government_verifications', 'verification_timelines', 'duplicate_claims', 'fraud_reports', 'property_visits', 'saved_properties'],
+      property_images: ['properties'],
+      property_documents: ['properties'],
+      ai_verifications: ['properties'],
+      government_verifications: ['properties', 'users'],
+      verification_timelines: ['properties', 'users'],
+      duplicate_claims: ['properties'],
+      fraud_reports: ['properties', 'users'],
+      property_visits: ['properties', 'users'],
+      saved_properties: ['properties', 'users']
+    };
+
+    function highlightRelation(tableId) {
+      document.querySelectorAll('.table-card').forEach(card => {
+        const idName = card.id.replace('tbl-', '');
+        if (idName === tableId) {
+          card.classList.add('relation-highlight');
+        } else if (relationMaps[tableId].includes(idName)) {
+          card.classList.add('relation-highlight');
+          
+          const possibleIds = [
+            `link-tbl-${tableId}-tbl-${idName}`,
+            `link-tbl-${idName}-tbl-${tableId}`
+          ];
+          possibleIds.forEach(id => {
+            const path = document.getElementById(id);
+            if (path) {
+              path.setAttribute('stroke-width', '2.5');
+              path.setAttribute('opacity', '0.95');
+              path.classList.add('relation-link-pulse');
+            }
+          });
+        }
+      });
+
+      const erdTitles = {
+        roles: "roles (RBAC Definitions)",
+        users: "users (Primary Accounts Directory)",
+        refresh_tokens: "refresh_tokens (Active Session Tokens)",
+        properties: "properties (Land Registry Ledger)",
+        property_images: "property_images (Visual Media Assets)",
+        property_documents: "property_documents (Registry PDF Files)",
+        ai_verifications: "ai_verifications (OCR & AI Scores)",
+        government_verifications: "government_verifications (Official Audit Logs)",
+        verification_timelines: "verification_timelines (Status History)",
+        duplicate_claims: "duplicate_claims (GIS Boundary Clashes)",
+        fraud_reports: "fraud_reports (Registry Fraud Alerts)",
+        property_visits: "property_visits (Inspection Appointments)",
+        saved_properties: "saved_properties (Buyer Bookmark Indices)"
+      };
+
+      const erdDescs = {
+        roles: "Defines application authorizations levels mapping user access: ADMIN, GOVERNMENT_OFFICER, PROVIDER, BUYER.",
+        users: "Contains profile metadata, roles linkages, and secure Bcrypt hashed credentials password mappings.",
+        refresh_tokens: "Tracks active user login JWT refresh tokens to persistent state session verification.",
+        properties: "Primary land listings data store. Houses unique land codes, survey numbers, coordinates, prices, and validation stages status.",
+        property_images: "Keeps image links, display order mapping indexes, and thumbnails associated to land listings.",
+        property_documents: "Stores PDF deeds document types (Patta, Tax receipts, Sale deeds), OCR extract status, and verification levels.",
+        ai_verifications: "AI check results. Houses calculated trust index, forgery metrics, risk score levels, and ML valuation scores.",
+        government_verifications: "Official registry approvals directory. Tracks verifying officer UUID, audit remarks logs, and status checks.",
+        verification_timelines: "Step-by-step history logs of approval events (e.g. UPLOADED ➔ AI_CHECK ➔ APPROVED) tracking users who triggered actions.",
+        duplicate_claims: "Flags geometric boundary overlap warnings comparing property polygons and mapping similarity ratios.",
+        fraud_reports: "Enables users to file warnings against listings, recording disputing reasons, timeline alerts, and verifying officer review.",
+        property_visits: "Maintains inspection visit bookings connecting prospective buyers to registry properties.",
+        saved_properties: "Indexed buyer bookmarks allowing dashboard tracking of interesting properties."
+      };
+
+      document.getElementById('erdTitle').innerText = erdTitles[tableId];
+      document.getElementById('erdDesc').innerText = erdDescs[tableId];
+    }
+
+    function clearRelation() {
+      document.querySelectorAll('.table-card').forEach(card => card.classList.remove('relation-highlight'));
+      document.querySelectorAll('.relation-link').forEach(path => {
+        path.setAttribute('stroke-width', '1.5');
+        path.setAttribute('opacity', '0.12');
+        path.classList.remove('relation-link-pulse');
+      });
+      document.getElementById('erdTitle').innerText = "Database Model";
+      document.getElementById('erdDesc').innerText = "Hover over database table cards to trace foreign key relationships and visual linking nodes.";
+    }
+
+    // Default select
+    window.onload = () => {
+      selectLayer('client');
+      selectState(0);
+    };
+
+    window.addEventListener('resize', drawERDConnections);
+  </script>
+</body>
+</html>
