@@ -37,18 +37,25 @@ pie title Ground-Truth Dataset Composition (N = 1,250 Cases)
 ### Diagram 2: System Performance & Resilience Quadrant Matrix
 
 ```mermaid
-quadrantChart
-    title Verification Precision vs. Impersonation Defense Resilience
-    x-axis Low Impersonation Defense (0%) --> High Impersonation Defense (100%)
-    y-axis High Latency (Days) --> Real-Time Low Latency (Seconds)
-    quadrant-1 LandLens I3B Platform (99.36% Defense, 3.82s)
-    quadrant-2 Single-Tier Vision OCR (0.00% Defense, 4.10s)
-    quadrant-3 Traditional Sub-Registrar Office (54.20% Defense, 14.2 Days)
-    quadrant-4 Rule-Based Template Matchers (0.00% Defense, 18.50s)
-    "Manual Sub-Registrar Office": [0.54, 0.12]
-    "Tesseract / Basic OCR": [0.05, 0.78]
-    "Cloud Document AI (No Stage 2)": [0.10, 0.88]
-    "LandLens I3B Platform": [0.99, 0.96]
+flowchart TB
+    subgraph Matrix ["Verification Precision vs. Impersonation Defense Matrix"]
+        direction TB
+        
+        subgraph TopTier ["REAL-TIME LOW LATENCY (Sub-5 Seconds)"]
+            Q2["Single-Tier Vision OCR / Cloud AI<br>Speed: 3.8s - 6.2s<br>Precision: 83.50%<br>Fake-Seller Defense: 0.00% (VULNERABLE)"]
+            Q1["LandLens I3B Platform (Our Engine)<br>Speed: 3.82s Real-Time<br>Precision: 98.62% | F1: 97.44%<br>Fake-Seller Defense: 99.36% (RESILIENT)"]
+        end
+        
+        subgraph BottomTier ["HIGH LATENCY / MANUAL REVIEW (Days to Weeks)"]
+            Q3["Manual Sub-Registrar Review (SRO)<br>Speed: 14.2 Days Queue<br>Precision: 79.20%<br>Fake-Seller Defense: 54.20% (INCONSISTENT)"]
+            Q4["Legacy Template Matchers<br>Speed: 18.5s Batch<br>Precision: 68.14%<br>Fake-Seller Defense: 0.00% (VULNERABLE)"]
+        end
+    end
+
+    style Q1 fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    style Q2 fill:#f59e0b,stroke:#d97706,stroke-width:1px,color:#fff
+    style Q3 fill:#ef4444,stroke:#b91c1c,stroke-width:1px,color:#fff
+    style Q4 fill:#6b7280,stroke:#374151,stroke-width:1px,color:#fff
 ```
 
 ---
