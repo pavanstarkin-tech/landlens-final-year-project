@@ -21,6 +21,27 @@ In real-time empirical benchmarking across $N = 1,250$ test documents (incorpora
 
 ## 📊 2. Research Benchmark Diagrams & Visual Layouts
 
+### 🖼️ High-Resolution Research Architecture & Benchmark Figures
+
+<p align="center">
+  <img src="./docs/images/i3b_architecture_diagram.jpg" alt="LandLens I3B Dual-Layer Architecture Infographic" width="850" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);"/>
+</p>
+<p align="center">
+  <em>Figure 1: High-Level Architectural Flow of the LandLens I3B Dual-Layer Parameter Concordance and Stage 2 Registered Owner Confirmation Protocol.</em>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="./docs/images/i3b_benchmark_evaluation.jpg" alt="LandLens Benchmark Evaluation and F1-Score Performance" width="850" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);"/>
+</p>
+<p align="center">
+  <em>Figure 2: Empirical Performance Analysis: F1-Score Benchmark Comparison, Ground-Truth Dataset Composition, and Real-Time Latency Metrics.</em>
+</p>
+
+<br/>
+
+
 ### Diagram 1: Empirical Distribution of Evaluated Fraud & Verification Cases ($N = 1,250$)
 
 ```mermaid
