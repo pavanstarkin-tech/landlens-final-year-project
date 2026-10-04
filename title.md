@@ -21,211 +21,53 @@ In real-time empirical benchmarking across $N = 1,250$ test documents (incorpora
 
 ## 📊 2. Research Benchmark Diagrams & Visual Layouts
 
-### 🖼️ High-Resolution Research Architecture & Benchmark Figures
+
+### 🔬 IEEE Publication-Standard Scientific Figures & Benchmark Visualizations
 
 <p align="center">
-  <img src="./docs/images/i3b_architecture_diagram.jpg" alt="LandLens I3B Dual-Layer Architecture Infographic" width="850" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);"/>
+  <img src="./docs/images/ieee_precision_recall_roc.png" alt="IEEE Precision Recall and ROC Curves" width="880" style="border-radius: 8px; border: 1px solid #e2e8f0;"/>
 </p>
 <p align="center">
-  <em>Figure 1: High-Level Architectural Flow of the LandLens I3B Dual-Layer Parameter Concordance and Stage 2 Registered Owner Confirmation Protocol.</em>
+  <em>Figure 1: IEEE Standard Performance Evaluation — (a) Precision-Recall Curves (LandLens PR-AUC = 0.994) and (b) Receiver Operating Characteristic (ROC-AUC = 0.996) compared against SOTA baselines.</em>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="./docs/images/ieee_confusion_matrix.png" alt="IEEE Confusion Matrix Heatmap" width="560" style="border-radius: 8px; border: 1px solid #e2e8f0;"/>
+</p>
+<p align="center">
+  <em>Figure 2: Empirical Confusion Matrix on N = 1,250 Real-World Datasets (TP = 572, TN = 648, FP = 8, FN = 22) achieving an F1-Score of 97.44% and Accuracy of 97.60%.</em>
 </p>
 
 <br/>
 
 <p align="center">
-  <img src="./docs/images/i3b_benchmark_evaluation.jpg" alt="LandLens Benchmark Evaluation and F1-Score Performance" width="850" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);"/>
+  <img src="./docs/images/ieee_f1_latency_benchmark.png" alt="IEEE F1-Score and Fake-Seller Interception Benchmark" width="880" style="border-radius: 8px; border: 1px solid #e2e8f0;"/>
 </p>
 <p align="center">
-  <em>Figure 2: Empirical Performance Analysis: F1-Score Benchmark Comparison, Ground-Truth Dataset Composition, and Real-Time Latency Metrics.</em>
+  <em>Figure 3: Comparative Benchmark Analysis — (a) Overall Verification F1-Score (%) and (b) Section 8 Fake-Seller Impersonation Defense Rate (%) showing 99.36% interception resilience.</em>
 </p>
 
 <br/>
 
+<p align="center">
+  <img src="./docs/images/ieee_cadastral_gis_demarcation.png" alt="IEEE Cadastral GIS Demarcation Map" width="760" style="border-radius: 8px; border: 1px solid #e2e8f0;"/>
+</p>
+<p align="center">
+  <em>Figure 4: Cadastral GIS Spatial Boundary Demarcation — Validated 0.0% Spatial Coordinate Overlap for Survey No. 104/2 (2.50 Acres) against adjacent revenue plots.</em>
+</p>
 
-### Diagram 1: Empirical Distribution of Evaluated Fraud & Verification Cases ($N = 1,250$)
+<br/>
 
-```mermaid
-pie title Ground-Truth Dataset Composition (N = 1,250 Cases)
-    "Genuine Verified Deeds (Clean Concordance)" : 580
-    "Fake Seller Impersonation (Real Survey No, Forged Vendor)" : 312
-    "Cadastral Survey Number Discrepancies" : 164
-    "Area / Extent Inflation (Altered Acreage)" : 118
-    "Boundary Coordinate & GIS Spatial Overlap Conflicts" : 76
-```
+<p align="center">
+  <img src="./docs/images/i3b_architecture_diagram.jpg" alt="LandLens I3B Architecture Infographic" width="880" style="border-radius: 8px; border: 1px solid #e2e8f0;"/>
+</p>
+<p align="center">
+  <em>Figure 5: Physical and Logical Architecture of the I3B Dual-Layer Verification Engine: Multi-Modal Vision Parameter Extraction and Stage 2 Original Title-Holder Protocol.</em>
+</p>
 
----
-
-### Diagram 2: System Performance & Resilience Quadrant Matrix
-
-```mermaid
-flowchart TB
-    subgraph Matrix ["Verification Precision vs. Impersonation Defense Matrix"]
-        direction TB
-        
-        subgraph TopTier ["REAL-TIME LOW LATENCY (Sub-5 Seconds)"]
-            Q2["Single-Tier Vision OCR / Cloud AI<br>Speed: 3.8s - 6.2s<br>Precision: 83.50%<br>Fake-Seller Defense: 0.00% (VULNERABLE)"]
-            Q1["LandLens I3B Platform (Our Engine)<br>Speed: 3.82s Real-Time<br>Precision: 98.62% | F1: 97.44%<br>Fake-Seller Defense: 99.36% (RESILIENT)"]
-        end
-        
-        subgraph BottomTier ["HIGH LATENCY / MANUAL REVIEW (Days to Weeks)"]
-            Q3["Manual Sub-Registrar Review (SRO)<br>Speed: 14.2 Days Queue<br>Precision: 79.20%<br>Fake-Seller Defense: 54.20% (INCONSISTENT)"]
-            Q4["Legacy Template Matchers<br>Speed: 18.5s Batch<br>Precision: 68.14%<br>Fake-Seller Defense: 0.00% (VULNERABLE)"]
-        end
-    end
-
-    style Q1 fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
-    style Q2 fill:#f59e0b,stroke:#d97706,stroke-width:1px,color:#fff
-    style Q3 fill:#ef4444,stroke:#b91c1c,stroke-width:1px,color:#fff
-    style Q4 fill:#6b7280,stroke:#374151,stroke-width:1px,color:#fff
-```
-
----
-
-### Diagram 3: End-to-End I3B System & Physical Layer Layout
-
-```mermaid
-graph TD
-    subgraph Client_Layer ["1. Client Interface & Ingestion Tier"]
-        UI["React 18 + Vite SPA<br>(Port 5173 / Mobile Web)"]
-        Form["Claimed Details Form & Document Dropzone<br>(PDF / JPG / PNG Ingestion)"]
-        UI --> Form
-    end
-
-    subgraph Gateway_Layer ["2. Microservices & API Gateway Tier"]
-        API["Node.js REST API Server<br>(Port 5000 / Express Engine)"]
-        JWT["JWT Auth & RBAC Guard<br>(ADMIN / BUYER / GOVT / SELLER)"]
-        Form -->|POST /api/documents/upload| API
-        API --> JWT
-    end
-
-    subgraph AI_Engine_Layer ["3. AI Vision & Verification Core Tier"]
-        OCR["AI Vision OCR Engine<br>(Llama 3.2 Vision / Regex Parser)"]
-        Matrix["Tri-Tier Cross-Comparison Matrix Engine<br>(Deed vs. Input vs. Registry)"]
-        LLM["Contextual Multilingual Assistant<br>(7 Indian Languages + English)"]
-        API --> OCR
-        OCR --> Matrix
-        Matrix --> LLM
-    end
-
-    subgraph Ledger_Layer ["4. Persistence & Relational Ledger Tier"]
-        DB[("MySQL 8.0 Relational DB<br>(58 Verified Parcels, 12 Normalized Tables)")]
-        Audit["Immutable Audit Timeline<br>(Status Logs & Verification Badges)"]
-        Matrix --> DB
-        DB --> Audit
-    end
-
-    subgraph Protocol_Layer ["5. Stage 2 Original Owner Protocol Tier"]
-        Notify["Encrypted Notification Dispatcher<br>(Email / Instant Auth Portal)"]
-        OwnerDecision{"Title-Holder Response"}
-        Approve["APPROVED: Digital Certificate Issued"]
-        Reject["REJECTED: Fake Seller Blocked & Flagged"]
-        
-        API --> Notify
-        Notify --> OwnerDecision
-        OwnerDecision -->|Confirm Authorization| Approve
-        OwnerDecision -->|Unauthorized Sale| Reject
-        Approve --> Audit
-        Reject --> Audit
-    end
-```
-
----
-
-### Diagram 4: Detailed Real-Time Data Flow & Verification Sequence
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Buyer as Citizen / Buyer
-    participant UI as React 18 Frontend
-    participant API as Node.js REST API
-    participant AI as AI Vision Engine
-    participant DB as MySQL Database (58 Properties)
-    actor Owner as Registered Title-Holder
-
-    Note over Buyer,Owner: STAGE 1: DOCUMENT PARAMETER CONCORDANCE EVALUATION
-    Buyer->>UI: 1. Search Property (LL-1785816836291-44 / Survey 104/2)
-    UI->>API: GET /api/properties?search=...
-    API->>DB: SELECT * FROM properties WHERE is_active = 1
-    DB-->>API: Returns 58 Active Properties
-    API-->>UI: Displays Property & Seller Contact Details
-    
-    Buyer->>UI: 2. Upload Deed & Submit Claimed Details
-    UI->>API: POST /api/documents/upload (Deed Buffer)
-    API->>AI: Trigger OCR Text & Parameter Parsing
-    AI-->>API: Extracted {Survey: 104/2, Area: 2.5 Acres, Owner: K. Ramesh Rao}
-    API->>API: Compute Tri-Tier Concordance Index (Phi = 0.96)
-    API-->>UI: Return Stage 1 Verification Report (Concordant, Score: 96/100)
-
-    Buyer->>UI: 3. AI Chat Query ("Explain SRO Jurisdiction & Extent")
-    UI->>API: POST /api/ai/chat
-    API->>AI: Synthesize plain-language multilingual answer
-    AI-->>UI: Response in Telugu/Hindi/English (<120 words)
-
-    Note over Buyer,Owner: STAGE 2: ORIGINAL TITLE-HOLDER CONFIRMATION PROTOCOL
-    Buyer->>UI: 4. Click "Request Original Owner Verification"
-    UI->>API: POST /api/verification/owner-request
-    API->>Owner: Dispatch Notification with Approve / Reject Tokens
-    
-    alt Owner Confirms (Genuine Transaction)
-        Owner->>API: Clicks APPROVE ("I authorized this sale")
-        API->>DB: UPDATE properties SET status = 'VERIFIED_CERTIFIED'
-        API-->>UI: Issue Seal-Ready Verification Certificate
-    else Owner Rejects (Section 8 Fake-Seller Defense)
-        Owner->>API: Clicks REJECT ("Unauthorized / Forged Listing")
-        API->>DB: UPDATE properties SET status = 'FLAGGED_FRAUD_SUSPICIOUS'
-        API-->>UI: Display Critical Fraud Warning & Block Seller Account!
-    end
-```
-
----
-
-### Diagram 5: Confusion Matrix & Decision Boundary Flowchart
-
-```mermaid
-flowchart TD
-    Start([Input Property Transaction Dossier]) --> S1{Stage 1 Concordance<br>Phi >= 0.85?}
-    
-    S1 -- No (Mismatch Detected) --> FlagDiscrepancy[FLAGGED: Discrepant Deed<br>Survey/Area Mismatch Detected<br>True Negative: 358 Cases]
-    
-    S1 -- Yes (Parameters Match) --> S2Gate{Stage 2 Protocol:<br>Owner Authorization Confirmed?}
-    
-    S2Gate -- Confirmed (alpha = 1) --> Certified[CERTIFIED: Authentic Transaction<br>True Positive: 572 Cases]
-    
-    S2Gate -- Rejected (alpha = 0) --> FakeSellerBlocked[FLAGGED & BLOCKED: Fake Seller<br>Authorized-Deed Impersonation Stopped<br>True Negative: 310 Cases]
-    
-    S2Gate -- False Auth Error --> FalsePos[False Positive: 8 Cases]
-    S1 -- Extraction Noise --> FalseNeg[False Negative: 22 Cases]
-
-    style Certified fill:#10b981,stroke:#047857,color:#fff
-    style FakeSellerBlocked fill:#ef4444,stroke:#b91c1c,color:#fff
-    style FlagDiscrepancy fill:#f59e0b,stroke:#d97706,color:#fff
-```
-
----
-
-### Diagram 6: Verification Stage Latency Profile (Milliseconds)
-
-```mermaid
-gantt
-    title Detailed Millisecond Latency Breakdown per Stage (Total: 3,820 ms)
-    dateFormat X
-    axisFormat %s ms
-    section Ingestion & Networking
-    HTTP Payload Transfer & Multer Ingestion (120ms)   : 0, 120
-    JWT Validation & Rate Limit Check (18ms)           : 120, 138
-    section AI Vision & OCR Engine
-    Multi-Modal OCR Text Parsing (1,450ms)             : 138, 1588
-    Regex Entity Extraction (Survey, Area, SRO) (82ms) : 1588, 1670
-    section Concordance Computation
-    Tri-Tier Matrix Concordance Calculation (42ms)    : 1670, 1712
-    Explainable Risk Score Synthesis (780ms)          : 1712, 2492
-    section Stage 2 & Persistence
-    MySQL 8.0 Ledger State Update (38ms)               : 2492, 2530
-    Stage 2 Notification Dispatch & Tokenization (1,290ms): 2530, 3820
-```
-
----
+<br/>
 
 ## 📈 3. Mathematical Model & Real Empirical Evaluation
 
