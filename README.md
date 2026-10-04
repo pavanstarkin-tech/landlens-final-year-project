@@ -570,10 +570,19 @@ com.landlens
 <br/>
 
 <p align="center">
-  <img src="./docs/images/i3b_architecture_diagram.jpg" alt="LandLens I3B Architecture Infographic" width="880" style="border-radius: 8px; border: 1px solid #e2e8f0;"/>
+  <img src="./docs/images/i3b_architecture_diagram.png" alt="LandLens I3B Architecture Diagram" width="900" style="border-radius: 8px; border: 1px solid #e2e8f0;"/>
 </p>
 <p align="center">
-  <em>Figure 5: Physical and Logical Architecture of the I3B Dual-Layer Verification Engine: Multi-Modal Vision Parameter Extraction and Stage 2 Original Title-Holder Protocol.</em>
+  <em>Figure 5: Physical and Logical Architecture of the I3B Dual-Layer Verification Engine — Stage 1 Tri-Tier Parameter Concordance & Stage 2 Decoupled Title-Holder Authorization Protocol.</em>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="./docs/images/i3b_benchmark_evaluation.png" alt="LandLens I3B Empirical Evaluation Infographic" width="900" style="border-radius: 8px; border: 1px solid #e2e8f0;"/>
+</p>
+<p align="center">
+  <em>Figure 6: Empirical Performance, Latency, and Fraud Resilience Evaluation — Multi-Metric Benchmark (N=1,250), Fake-Seller Defense Resilience (99.36%), Logarithmic Verification Latency (3.82s vs 14.2 Days), and Ground-Truth Dataset Composition.</em>
 </p>
 
 <br/>
