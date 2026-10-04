@@ -132,7 +132,7 @@ LandLens is engineered as a full-stack, enterprise-grade AI solution designed fo
 | :---: | :---: | :---: |
 | ![Slide 10](./presentation/10.png) | ![Slide 11](./presentation/11.png) | ![Slide 12](./presentation/12.png) |
 
-| Slide 13: Team & Conclusion |
+| Slide 13: Architecture Summary & Conclusion |
 | :---: |
 | ![Slide 13](./presentation/14.png) |
 
@@ -162,7 +162,7 @@ LandLens is engineered as a full-stack, enterprise-grade AI solution designed fo
 5. [End-to-End Demo Story](#5-end-to-end-demo-story)
 6. [Platform Value Proposition and Social Impact](#6-platform-value-proposition-and-social-impact)
 7. [Application Screenshots and UI Showcase](#7-application-screenshots-and-ui-showcase)
-8. [Team Members and Key Contributions](#8-team-members-and-key-contributions)
+8. [Core System Modules and Engineering Breakdown](#8-core-system-modules-and-engineering-breakdown)
 9. [One-Week Rapid Implementation Sprint and Bug Fixes](#9-one-week-rapid-implementation-sprint-and-bug-fixes)
 10. [Complete Technology Stack by Service](#10-complete-technology-stack-by-service)
 11. [Platform and Cloud Infrastructure Services](#11-platform-and-cloud-infrastructure-services)
@@ -368,13 +368,14 @@ Below is an interactive visual walkthrough of the live LandLens platform structu
 
 ---
 
-## 8. Team Members and Key Contributions
+## 8. Core System Modules and Engineering Breakdown
 
-| Avatar | GitHub Profile | Developer | Role & Key Contributions |
-| :---: | :--- | :--- | :--- |
-| <img src="./dashscreenshots/naseema.png" width="65" style="border-radius: 15px; object-fit: cover; aspect-ratio: 1/1;"/> | [@ShaikNaseema04](https://github.com/ShaikNaseema04) | **Shaik Naseema** | **Backend & Database Engineer**<br>• Engineered Spring Boot 3.4 microservices, RESTful APIs, Spring Security with JWT authentication, and RBAC authorization.<br>• Architected and normalized 3NF MySQL relational database schema, Hibernate/JPA entity relationships, and connection pooling.<br>• Built AI-powered document verification, OCR processing pipelines, and automated trust scoring backend services.<br>• Implemented robust database transaction management, query optimizations, and data persistence models. |
-| <img src="https://github.com/Santhipriyaa27.png" width="65" style="border-radius: 15px;"/> | [@Santhipriyaa27](https://github.com/Santhipriyaa27) | **Santhi Priya** | **DevOps & Cloud Infrastructure Engineer**<br>• Architected & deployed AWS cloud infrastructure including ECS Fargate container clusters, ALB load balancers, and VPC routing.<br>• Configured Amazon CloudFront CDN edge distributions with SSL/TLS termination and S3 static bucket web hosting.<br>• Built CI/CD automated deployment pipelines with GitHub Actions and Docker containerization.<br>• Managed cloud security, SonarQube automated code quality gates, serverless API Gateway, and production release workflows. |
-| <img src="https://github.com/pavanstarkin-tech.png" width="65" style="border-radius: 15px;"/> | [@pavanstarkin-tech](https://github.com/pavanstarkin-tech) | **Pavan Kumar Swamy** | **Frontend & UI/UX Engineer**<br>• Engineered modern React 18 + Vite responsive frontend application with glassmorphism design system & Tailwind styling.<br>• Built interactive Mapbox GL JS spatial boundary viewer, GIS coordinate overlap visualizer, and Pannellum 360° VR tour player.<br>• Implemented multi-role dashboards for Citizen Buyers, Land Providers, Government Officers, and System Admins.<br>• Integrated AI Citizen Assistant chatbot, multilingual translation interfaces (7 Indian languages), and client-side state management. |
+| Module | Core Responsibilities | Technology Stack |
+| :--- | :--- | :--- |
+| **Frontend UI & Verification Hub** | React 18 SPA, 5-step Dual-Layer Verification Hub, interactive Mapbox GIS boundary viewer, Pannellum 360° tour player, and 4 role dashboards. | React 18, Vite, TypeScript, Tailwind CSS, Lucide Icons |
+| **Backend API & Serverless Services** | Node.js REST API server, JWT authentication filter, RBAC authorization, and MySQL database connection bridge. | Node.js, Express, MySQL2, JWT |
+| **AI Vision & Document OCR Engine** | Multilingual conversational assistant (7 Indian languages), OCR deed parameter extraction, explainable trust scoring, and cross-comparison matrix. | Meta Llama 3.2 Vision / NVIDIA NIM |
+| **Database & Relational Ledger** | 3NF normalized relational schema storing properties, legal documents, owner verification states, fraud dispute reports, and audit logs. | MySQL 8.0 (Live 58 properties) |
 
 ---
 
@@ -952,28 +953,62 @@ erDiagram
 
 ---
 
-## 17. Local Development and Setup Guide
+## 17. Local Development and Deployment Guide
 
-### A. Frontend Setup (`/frontend-react`)
+### 🚀 Method 1: 1-Click Automated Launch (Recommended)
+Simply double-click the included batch launcher file in Windows Explorer:
+📁 **`run_locally.bat`**
+
+Or run via terminal:
 ```bash
+npm start
+# OR
+node start.js
+```
+*What happens automatically:*
+1. Starts Backend REST API Server on `http://localhost:5000` (connected live to MySQL database).
+2. Starts Frontend React Vite Server on `http://localhost:5173`.
+3. Opens your default web browser directly to `http://localhost:5173`.
+
+---
+
+### 🛠️ Method 2: Manual Step-by-Step Launch (Separate Terminals)
+
+#### Step 1: Install Dependencies
+```bash
+# In the root folder:
+npm install
+
+# In the frontend-react folder:
 cd frontend-react
 npm install
-npm run dev
+cd ..
 ```
-The frontend will run at `http://localhost:5173`.
 
-### B. Backend Setup (`/back_end`)
-```powershell
-cd back_end
-.\mvnw.cmd spring-boot:run
-```
-The server will start listening at `http://localhost:8080`.
-
-### C. Docker Compose (Full Stack Local Orchestration)
+#### Step 2: Start Backend API Server
 ```bash
-docker-compose up --build -d
+# Terminal 1 (Root Directory):
+node backend_server.js
+# Backend API will run on http://localhost:5000
 ```
-Boots MySQL 8.0 and the Spring Boot service cleanly in an isolated Docker container network.
+
+#### Step 3: Start Frontend Web Application
+```bash
+# Terminal 2 (Root Directory):
+npm --prefix frontend-react run dev
+# Frontend will run on http://localhost:5173
+```
+
+---
+
+### 🧪 Method 3: Running the Automated QA Test Suite
+To verify end-to-end functionality across Backend Health, MySQL Queries, Auth tokens, Verification logic, and TypeScript builds:
+```bash
+npm test
+# OR
+node qa_test_suite.js
+```
+*(Runs all 13 automated tests with 100% pass rate verification).*
 
 ---
 
@@ -1022,4 +1057,4 @@ Boots MySQL 8.0 and the Spring Boot service cleanly in an isolated Docker contai
 2. Commit your changes using meaningful, structured commit messages.
 3. Submit a Pull Request targeting the `main` branch.
 
-*Developed by **Shaik Naseema** (Backend & DB), **Santhi Priya** (DevOps), and **Pavan Kumar Swamy** (Frontend).*
+*LandLens is an academic Final Year Major Project designed for transparent land governance, citizen empowerment, and fraud prevention.*
