@@ -28,6 +28,10 @@
   <a href="#17-local-development-and-deployment-guide">
     <img src="https://img.shields.io/badge/1--Click_Launcher-run__locally.bat-orange?style=for-the-badge" alt="1-Click Launcher"/>
   </a>
+  &nbsp;
+  <a href="./IEEE_RESEARCH_PAPER.md">
+    <img src="https://img.shields.io/badge/IEEE_Research_Paper-IEEE__RESEARCH__PAPER.md-purple?style=for-the-badge&logo=ieee" alt="IEEE Research Paper"/>
+  </a>
 </p>
 
 ### 🌐 Local Running Web Application & Endpoints
